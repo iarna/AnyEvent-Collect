@@ -32,11 +32,11 @@ been emitted at least once.
 sub collect_all(&) {
     my( $todo ) = @_;
     my $cv = AE::cv;
-    &Event::Wrappable::wrap_events( $todo, sub {
-        my( $event ) = @_;
+    Event::Wrappable->wrap_events( $todo, sub {
+        my( $listener ) = @_;
         $cv->begin;
         my $ended = 0;
-        return sub { $event->(); $cv->end unless $ended++ };
+        return sub { $listener->(@_); $cv->end unless $ended++ };
     } );
     $cv->recv;
 }
@@ -52,25 +52,13 @@ unemitted events-- you'll have to do that yourself, if that's what you want.
 sub collect_any(&) {
     my( $todo ) = @_;
     my $cv = AE::cv;
-    &Event::Wrappable::wrap_events( $todo, sub {
-        my( $event ) = @_;
-        return sub { $event->(); $cv->send };
+    Event::Wrappable->wrap_events( $todo, sub {
+        my( $listener ) = @_;
+        return sub { $listener->(@_); $cv->send };
     } );
     $cv->recv;
 }
 
-sub __collect_event(&) {
-    my $todo = shift;
-    my $cv = $cvs[0];
-    if ( $cv->[COLLECT_TYPE] eq 'all' ) {
-        $cv->[COLLECT_CV]->begin;
-        my $ended;
-        return sub { $todo->(); unless ($ended++) { $cv->[COLLECT_CV]->end } };
-    }
-    else {
-        return sub { $todo->(); $cv->[COLLECT_CV]->send };
-    }
-}
 1;
 =head1 SYNOPSIS
 
