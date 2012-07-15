@@ -66,16 +66,17 @@ sub collect_any(&) {
     use AnyEvent::Collect;
 
     # Wait for all of a collection of events to trigger once:
-    my( $t1, $t2 );
+    my( $w1, $w2 );
     collect {
-        $t1 = AE::timer 2, 0, event { say "two" };
-        $t2 = AE::timer 3, 0, event { say "three" };
+        $w1 = AE::timer 2, 0, event { say "two" };
+        $w2 = AE::timer 3, 0, event { say "three" };
     }; # Returns after 3 seconds having printed "two" and "three"
 
     # Wait for any of a collection of events to trigger:
+    my( $w3, $w4 );
     collect_any {
-        $t1 = AE::Timer 2, 0 event { say "two" };
-        $t2 = AE::Timer 3, 0 event { say "three" };
+        $w3 = AE::Timer 2, 0 event { say "two" };
+        $w4 = AE::Timer 3, 0 event { say "three" };
     };
     # Returns after 2 seconds, having printed 2.  Note however that
     # the other event will still be emitted in another second.  If
