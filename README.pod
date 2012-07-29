@@ -25,8 +25,8 @@ version 0.1.0
     # Wait for any of a collection of events to trigger:
     my( $w3, $w4 );
     collect_any {
-        $w3 = AE::Timer 2, 0 event { say "two" };
-        $w4 = AE::Timer 3, 0 event { say "three" };
+        $w3 = AE::timer 2, 0, event { say "two" };
+        $w4 = AE::timer 3, 0, event { say "three" };
     };
     # Returns after 2 seconds, having printed 2.  Note however that
     # the other event will still be emitted in another second.  If
@@ -35,7 +35,7 @@ version 0.1.0
 
     # Or using L<ONE>
     use ONE::Timer;
-    use ANyEvent::Collect;
+    use AnyEvent::Collect;
     collect {
         ONE::Timer->after( 2 => event { say "two" } );
         ONE::Timer->after( 3 => event { say "three" } );
@@ -106,8 +106,7 @@ and may be cloned from L<git://https://github.com/iarna/AnyEvent-Collect.git>
 
 =head2 Websites
 
-The following websites have more information about this module, and may be of help to you. As always,
-in addition to those websites please use your favorite search engine to discover more resources.
+More information can be found at:
 
 =over 4
 
@@ -124,16 +123,6 @@ L<http://metacpan.org/release/AnyEvent-Collect>
 =head2 Bugs / Feature Requests
 
 Please report any bugs at L<https://github.com/iarna/AnyEvent-Collect/issues>.
-
-=head2 Source Code
-
-The code is open to the world, and available for you to hack on. Please feel free to browse it and play
-with it, or whatever. If you want to contribute patches, please send me a diff or prod me to pull
-from your repository :)
-
-L<https://github.com/iarna/AnyEvent-Collect>
-
-  git clone https://github.com/iarna/AnyEvent-Collect.git
 
 =head1 AUTHOR
 
