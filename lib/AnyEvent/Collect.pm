@@ -75,8 +75,8 @@ sub collect_any(&) {
     # Wait for any of a collection of events to trigger:
     my( $w3, $w4 );
     collect_any {
-        $w3 = AE::Timer 2, 0 event { say "two" };
-        $w4 = AE::Timer 3, 0 event { say "three" };
+        $w3 = AE::timer 2, 0, event { say "two" };
+        $w4 = AE::timer 3, 0, event { say "three" };
     };
     # Returns after 2 seconds, having printed 2.  Note however that
     # the other event will still be emitted in another second.  If
@@ -85,7 +85,7 @@ sub collect_any(&) {
 
     # Or using L<ONE>
     use ONE::Timer;
-    use ANyEvent::Collect;
+    use AnyEvent::Collect;
     collect {
         ONE::Timer->after( 2 => event { say "two" } );
         ONE::Timer->after( 3 => event { say "three" } );
